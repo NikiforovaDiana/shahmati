@@ -1,593 +1,596 @@
 <script src="jquery.min.js"></script>
 <script src="http://chess-13464.onmodulus.net/socket.io/socket.io.js"></script>
-<div id="chess"></div>
+ <div id="chess"> </div>
 <script type='text/javascript'>
-    var socket = io.connect('http://chess-13464.onmodulus.net/');
-    var fff = false;
-    socket.on('connect', function (data) {
-        alert("подключились к серверу");
-    });
-    socket.on('start', function (clr) {
-            alert("игра началась");
-            CreateChess();
-            $("td").click(function () {
-                part($(this));
-                alert("вы играете:" + clr);
-                fclr = clr;
-            });
-            socket.on('step', function (a, b, c, d) {
-                x = a;
-                y = b;
-                x1 = c;
-                y1 = d;
-                clickone();
-                clicktwo();
-            });
-            socket.on('finish', function () {
-                fff = true;
-                alert("Мат! Вы проиграли!");
-                window.close();
-            });
-            socket.on('disconnect', function () {
 
-                alert("Соперник сдался! Вы победили! Окно будет закрыто!")
-                window.close();
+var socket = io.connect('http://chess-13464.onmodulus.net/');
+var fff=false;
+socket.on('connect', function (data) {
+alert("подключились к серверу");
+});
+socket.on('start', function (clr) {
+alert("игра началась");
+    CreateChess();
+    $("td").click(function () {
+        part($(this));
+    })
 
-            });
-            var size = 50;
-            var N = 8;
+    fclr = clr;
+});
+socket.on('step', function (a, b, c, d) {
+    x = a;
+    y = b;
+    x1 = c;
+    y1 = d;
+    clickone();
+    clicktwo();
+});
+socket.on('finish', function () {
+fff=true;
+    alert("Мат! Вы проиграли!");
+     window.close();
+});
+socket.on('disconnect', function () {
+	alert("Соперник сдался! Вы победили! Окно будет закрыто!")
+    window.close();
 
-            function CreateChess() {
-
-                if (isFinite(N) == true) {
-                    $("#chess").html("<table>");
-                    for (var i = 0; i < N; i++) {
-                        $("#chess").append("<tr>");
-                        for (var j = 0; j < N; j++) {
-                            if (i == 0 || i == 1 || i == 6 || i == 7) {
-                                $("#chess").append("<td height='" + size + "' width='" + size + "' x=" + j + " y=" + i + " free='no' ></td>");
-                            } else {
-                                $("#chess").append("<td height='" + size + "' width='" + size + "' x=" + j + " y=" + i + " free='yes'></td>");
-                            }
-                        }
-                        $("#chess").append("</tr>");
+});
+var size=50;
+var N=8;
+	function CreateChess(){
+				
+		if (isFinite (N)==true){
+			$("#chess").html("<center><table border ='1'>");
+			for (var i=0;i<N;i++){
+				$("#chess").append("<tr>");
+					for (var j=0;j<N;j++){
+						if(i==0 || i==1 || i==6 || i==7){
+							$("#chess").append("<td height='"+size+"' width='"+size+"' x="+j+" y="+i+" free='no' ></td>" );
+						}
+						else{
+							$("#chess").append("<td height='"+size+"' width='"+size+"' x="+j+" y="+i+" free='yes'></td>");
+						}	
+					}		
+				$("#chess").append("</tr>");
+			}
+			$("#chess").append("</center></table>");
+		}
+		color();
+		ChessMan();
+	}
+	 function color() {
+        var k = 0;
+        var color = ["#FFFFFF", "#000000"];
+        for (var i = 0; i < N; i++) {
+            for (var j = 0; j < N; j++) {
+                $("td[x='" + i + "']*[y='" + j + "']").attr("bgcolor", color[k])
+				if (k==0) {
+				    if (j == N - 1) break;
+                    k++;
+				}
+				else {
+				    if (j == N - 1) break;
+                    k--;
+                }
+            }
+        }
+    }
+   function ChessMan(){
+	size=size-5;
+		$("td[x='0']*[y='0']").append("<img src='img/black/slon.png' height='"+size+"' width='"+size+"' x='0' y='0' name='slon' position='up' color='black'>  ");
+		$("td[x='1']*[y='0']").append("<img src='img/black/ofic.png' height='"+size+"' width='"+size+"' x='1' y='0' name='ofic' position='up' color='black'> ");
+		$("td[x='2']*[y='0']").append("<img src='img/black/kon.png' height='"+size+"' width='"+size+"' x='2' y='0' name='kon' position='up' color='black'> ");
+		$("td[x='3']*[y='0']").append("<img src='img/black/koroleva.png' height='"+size+"' width='"+size+"' x='3' y='0' name='koroleva' position='up' color='black'> ");
+		$("td[x='4']*[y='0']").append("<img src='img/black/korol.png' height='"+size+"' width='"+size+"' x='4' y='0' name='korol' position='up' color='black'> ");
+		$("td[x='5']*[y='0']").append("<img src='img/black/kon.png' height='"+size+"' width='"+size+"' x='5' y='0' name='kon' position='up' color='black'> ");		
+		$("td[x='6']*[y='0']").append("<img src='img/black/ofic.png' height='"+size+"' width='"+size+"' x='6' y='0' name='ofic' position='up' color='black'> ");
+		$("td[x='7']*[y='0']").append("<img src='img/black/slon.png' height='"+size+"' width='"+size+"' x='7' y='0' name='slon' position='up' color='black'> ");
+		 for(var i=0;i<N;i++){
+			$("td[x='"+i+"']*[y='1']").append("<img src='img/black/peshka.png' height='"+size+"' width='"+size+"' x='"+i+"' y='1' name='peshka' position='up' color='black'> ");
+		 }
+		 
+		 
+		$("td[x='0']*[y='7']").append("<img src='img/white/slon.png' height='"+size+"' width='"+size+"' x='0' y='7' name='slon' position='down' color='white'> ");
+		$("td[x='1']*[y='7']").append("<img src='img/white/ofic.png' height='"+size+"' width='"+size+"' x='1' y='7' name='ofic' position='down' color='white'> ");
+		$("td[x='2']*[y='7']").append("<img src='img/white/kon.png' height='"+size+"' width='"+size+"' x='2' y='7' name='kon' position='down' color='white'> ");
+		$("td[x='3']*[y='7']").append("<img src='img/white/koroleva.png' height='"+size+"' width='"+size+"' x='3' y='7' name='koroleva' position='down' color='white'> ");
+		$("td[x='4']*[y='7']").append("<img src='img/white/korol.png' height='"+size+"' width='"+size+"' x='4' y='7' name='korol' position='down' color='white'> ");
+		$("td[x='5']*[y='7']").append("<img src='img/white/kon.png' height='"+size+"' width='"+size+"' x='5' y='7' name='kon' position='down' color='white'> ");		
+		$("td[x='6']*[y='7']").append("<img src='img/white/ofic.png' height='"+size+"' width='"+size+"' x='6' y='7' name='ofic' position='down' color='white'> ");
+		$("td[x='7']*[y='7']").append("<img src='img/white/slon.png' height='"+size+"' width='"+size+"' x='7' y='7' name='slon' position='down' color='white'> ");
+		 for(var i=0;i<N;i++){
+			$("td[x='"+i+"']*[y='6']").append("<img src='img/white/peshka.png' height='"+size+"' width='"+size+"' x='"+i+"' y='6' name='peshka' position='down' color='white'> ");
+		 }
+		 size=size+5;
+		 }
+		    var count = 0;
+	var count=0;
+	var x;
+	var X;
+	var Y;
+	var y;
+	var x1;
+	var y1;
+	var yy;
+	var name;
+	var xx;
+	var fl;
+	var step={
+		0:"white",
+		1:"black"
+	}
+	var X1;
+	var Y1;
+	var x_const;
+	var y_const;
+	var fclr;
+	function clickone(){
+	var em=false;
+					name=$("img[x='"+x+"']*[y='"+y+"']").attr("name");
+					if (name == "peshka") {
+                        Peshka();
+                        PeshkaEst();
                     }
-                    $("#chess").append("</table>");
-                }
-                color();
-                ChessMan();
-            }
-
-            function color() {
-                var k = 0;
-                var color = ["#FFFFFF", "#000000"];
-                for (var i = 0; i < N; i++) {
-                    for (var j = 0; j < N; j++) {
-                        $("td[x='" + i + "']*[y='" + j + "']").attr("bgcolor", color[k])
-                        if (k == 0) {
-                            if (j == N - 1) break;
-                            k++;
-                        } else {
-                            if (j == N - 1) break;
-                            k--;
-                        }
+                    if (name == "slon") {
+                        Slon();
                     }
-                }
-            }
-
-            function ChessMan() {
-                size = size - 5;
-                $("td[x='0']*[y='0']").append("<img src='img/black/slon.png' height='" + size + "' width='" + size + "' x='0' y='0' name='slon' position='up' color='black'>  ");
-                $("td[x='1']*[y='0']").append("<img src='img/black/ofic.png' height='" + size + "' width='" + size + "' x='1' y='0' name='ofic' position='up' color='black'> ");
-                $("td[x='2']*[y='0']").append("<img src='img/black/kon.png' height='" + size + "' width='" + size + "' x='2' y='0' name='kon' position='up' color='black'> ");
-                $("td[x='3']*[y='0']").append("<img src='img/black/koroleva.png' height='" + size + "' width='" + size + "' x='3' y='0' name='koroleva' position='up' color='black'> ");
-                $("td[x='4']*[y='0']").append("<img src='img/black/korol.png' height='" + size + "' width='" + size + "' x='4' y='0' name='korol' position='up' color='black'> ");
-                $("td[x='5']*[y='0']").append("<img src='img/black/kon.png' height='" + size + "' width='" + size + "' x='5' y='0' name='kon' position='up' color='black'> ");
-                $("td[x='6']*[y='0']").append("<img src='img/black/ofic.png' height='" + size + "' width='" + size + "' x='6' y='0' name='ofic' position='up' color='black'> ");
-                $("td[x='7']*[y='0']").append("<img src='img/black/slon.png' height='" + size + "' width='" + size + "' x='7' y='0' name='slon' position='up' color='black'> ");
-                for (var i = 0; i < N; i++) {
-                    $("td[x='" + i + "']*[y='1']").append("<img src='img/black/peshka.png' height='" + size + "' width='" + size + "' x='" + i + "' y='1' name='peshka' position='up' color='black'> ");
-                }
-
-
-                $("td[x='0']*[y='7']").append("<img src='img/white/slon.png' height='" + size + "' width='" + size + "' x='0' y='7' name='slon' position='down' color='white'> ");
-                $("td[x='1']*[y='7']").append("<img src='img/white/ofic.png' height='" + size + "' width='" + size + "' x='1' y='7' name='ofic' position='down' color='white'> ");
-                $("td[x='2']*[y='7']").append("<img src='img/white/kon.png' height='" + size + "' width='" + size + "' x='2' y='7' name='kon' position='down' color='white'> ");
-                $("td[x='3']*[y='7']").append("<img src='img/white/koroleva.png' height='" + size + "' width='" + size + "' x='3' y='7' name='koroleva' position='down' color='white'> ");
-                $("td[x='4']*[y='7']").append("<img src='img/white/korol.png' height='" + size + "' width='" + size + "' x='4' y='7' name='korol' position='down' color='white'> ");
-                $("td[x='5']*[y='7']").append("<img src='img/white/kon.png' height='" + size + "' width='" + size + "' x='5' y='7' name='kon' position='down' color='white'> ");
-                $("td[x='6']*[y='7']").append("<img src='img/white/ofic.png' height='" + size + "' width='" + size + "' x='6' y='7' name='ofic' position='down' color='white'> ");
-                $("td[x='7']*[y='7']").append("<img src='img/white/slon.png' height='" + size + "' width='" + size + "' x='7' y='7' name='slon' position='down' color='white'> ");
-                for (var i = 0; i < N; i++) {
-                    $("td[x='" + i + "']*[y='6']").append("<img src='img/white/peshka.png' height='" + size + "' width='" + size + "' x='" + i + "' y='6' name='peshka' position='down' color='white'> ");
-                }
-                size = size + 5;
-            }
-            var count = 0;
-            var count = 0;
-            var x;
-            var X;
-            var Y;
-            var y;
-            var x1;
-            var y1;
-            var yy;
-            var name;
-            var xx;
-            var fl;
-            var step = {
-                0: "white",
-                1: "black"
-            }
-            var X1;
-            var Y1;
-            var x_const;
-            var y_const;
-            var fclr;
-
-            function clickone() {
-                var em = false;
-                name = $("img[x='" + x + "']*[y='" + y + "']").attr("name");
-                if (name == "peshka") {
-                    Peshka();
-                    PeshkaEst();
-                }
-                if (name == "slon") {
-                    Slon();
-                }
-                if (name == "kon") {
-                    Kon();
-                }
-                if (name == "ofic") {
-                    Ofic();
-                }
-                if (name == "koroleva") {
-                    Koroleva();
-                }
-                if (name == "korol") {
-                    Korol();
-                }
-
-            }
-
-            function clicktwo() {
-                if ($("td[x='" + x1 + "']*[y='" + y1 + "']").attr("bgcolor") == "#FF0000") {
-                    if ($("td[x='" + x1 + "']*[y='" + y1 + "']").attr("free") == "no" &&
-                        $("img[x='" + x1 + "']*[y='" + y1 + "']").attr("color") != $("img[x='" + x + "']*[y='" + y + "']").attr("color")) {
-                        var del = $("img[x='" + x1 + "']*[y='" + y1 + "']");
-                        del.remove();
-                        fl = true;
+                    if (name == "kon") {
+                        Kon();
                     }
-
-                    $("img[x='" + x + "']*[y='" + y + "']").appendTo("td[x='" + x1 + "']*[y='" + y1 + "']").attr("x", x1).attr("y", y1);
-                    $("td[x='" + x + "']*[y='" + y + "']").attr("free", "yes");
-                    $("td[x='" + x1 + "']*[y='" + y1 + "']").attr("free", "no");
-                    color();
-                    if (chek(step[0]) == "yes") {
-                        alert("вы подставляете короля под шах");
-                        em = false;
-                        $("img[x='" + x1 + "']*[y='" + y1 + "']").appendTo("td[x='" + X + "']*[y='" + Y + "']").attr("x", X).attr("y", Y);
-                        $("td[x='" + X + "']*[y='" + Y + "']").attr("free", "no");
-                        if (fl == true) {
-                            $("td[x='" + x1 + "']*[y='" + y1 + "']").attr("free", "no");
-                        } else {
-                            $("td[x='" + x1 + "']*[y='" + y1 + "']").attr("free", "yes");
-                        }
-                        try {
-                            del.appendTo("td[x='" + x1 + "']*[y='" + y1 + "']");
-                        } catch (e) {;
-                        }
-
-                    } else {
-
-                        if (chek(step[1]) == "yes") {
-
-                            alert("шах " + step[1]);
-                            if (chekmate(step[0]) == "yes") {
-                                socket.emit('step', X, Y, parseInt(x1), parseInt(y1));
-                                if (fff == false) {
-                                    socket.emit('finish');
-                                }
-
-                                alert("Вы выиграли!");
-                                window.close();
-                            } else {
-                                em = true;
-
-                            }
-                        } else {
-                            em = true;
-                        }
-                        var a = step[0];
-                        step[0] = step[1];
-                        step[1] = a;
-
-
+                    if (name == "ofic") {
+                        Ofic();
                     }
-
-                } else {
-                    alert("ход недопустим");
-                    em = false
-                }
-                color();
-                count = 0;
-            }
-
-            function part(r) {
-                count++;
-
-                if (count == 1) {
-                    if (r.attr("free") == "no") {
-                        x = r.attr("x");
-                        X = x;
-                        y = r.attr("y");
-                        Y = y;
-                        X1 = x;
-                        Y1 = y;
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") == step[0] && step[0] == fclr) {
-                            r.attr("bgcolor", "#00FF00");
-                            clickone();
-                        } else {
-                            count = 0;
-                        }
-                    } else {
-                        count = 0;
+                    if (name == "koroleva") {
+                        Koroleva();
                     }
-                } else if (count == 2) {
-                    fl = false;
-                    x1 = r.attr("x");
-                    y1 = r.attr("y");
-                    x_const = x1;
-                    y_const = y1;
-                    clicktwo();
-                    if (em == true) {
-                        socket.emit('step', X1, Y1, parseInt(x_const), parseInt(y_const));
-                        f = false;
+                    if (name == "korol") {
+                        Korol();
                     }
+				
+	}
+	function clicktwo(){
+		if($("td[x='"+x1+"']*[y='"+y1+"']").attr("bgcolor")=="#FF0000"){
+				if($("td[x='"+x1+"']*[y='"+y1+"']").attr("free")=="no" && 
+				   $("img[x='"+x1+"']*[y='"+y1+"']").attr("color")!=$("img[x='"+x+"']*[y='"+y+"']").attr("color")){
+						var del=$("img[x='"+x1+"']*[y='"+y1+"']");
+						del.remove();
+						fl=true;
+				}
+				
+				$("img[x='"+x+"']*[y='"+y+"']").appendTo("td[x='"+x1+"']*[y='"+y1+"']").attr("x",x1).attr("y",y1);
+				$("td[x='"+x+"']*[y='"+y+"']").attr("free","yes");
+				$("td[x='"+x1+"']*[y='"+y1+"']").attr("free","no");
+				color();
+				if(chek(step[0])=="yes"){
+					alert("вы подставляете короля под шах");
+					em=false;
+					$("img[x='"+x1+"']*[y='"+y1+"']").appendTo("td[x='"+X+"']*[y='"+Y+"']").attr("x",X).attr("y",Y);
+					$("td[x='"+X+"']*[y='"+Y+"']").attr("free","no");
+					if(fl==true){
+					$("td[x='"+x1+"']*[y='"+y1+"']").attr("free","no");
+					}
+					else{
+						$("td[x='"+x1+"']*[y='"+y1+"']").attr("free","yes");
+					}
+					try{del.appendTo("td[x='"+x1+"']*[y='"+y1+"']");}
+					catch(e) {;}
+					
+				}
+				else{
+					
+					if(chek(step[1])=="yes"){
+						
+						alert("шах "+step[1]);
+						if(chekmate(step[0])=="yes"){
+							socket.emit('step',X,Y,parseInt (x1),parseInt (y1));
+							if(fff==false){
+								socket.emit('finish');
+							}
+							
+							alert("Вы выиграли!");
+							window.close();
+						}
+						
+						else{
+							em=true;
+							
+						}
+					}
+					else{
+					em=true;
+					}
+					var a=step[0];
+					step[0]=step[1];
+					step[1]=a;
+					
+			
+				}
+				
+			}	
+			
+			else{ 
+			em=false
+			}	
+				color();
+				count=0;
+			}
+   function part(r){
+		count++;
+		
+		if(count==1){
+			if(r.attr("free")=="no"  ){	
+				x=r.attr("x");
+				X=x;
+				y=r.attr("y");
+				Y=y;
+				X1=x;
+				Y1=y;
+				if($("img[x='"+x+"']*[y='"+y+"']").attr("color")==step[0] && step[0]==fclr){
+					r.attr("bgcolor","#00FF00");
+					clickone();
+				}
+				else{
+					count=0;
+				}
+			}
+			else{
+				count=0; 
+			}
+		}
+		else if(count==2){
+		fl=false;
+			x1=r.attr("x");
+			y1=r.attr("y");
+			x_const=x1;
+			y_const=y1;	
+			clicktwo();
+			if(em==true){
+				socket.emit('step',X1,Y1,parseInt (x_const),parseInt (y_const));
+				f=false;
+			}
+			
+	}
+}
 
-                }
-            }
-
-            function Peshka() {
-                xx = {
-                    0: x
+    function Peshka() {
+        xx = {
+            0: x
+        };
+        if ($("img[x='" + x + "']*[y='" + y + "']").attr("position") == "down") {
+            if (y == 6) {
+                yy = {
+                    0: parseInt(y) - 1,
+                    1: parseInt(y) - 2
                 };
-                if ($("img[x='" + x + "']*[y='" + y + "']").attr("position") == "down") {
-                    if (y == 6) {
-                        yy = {
-                            0: parseInt(y) - 1,
-                            1: parseInt(y) - 2
-                        };
-                    } else {
-                        yy = {
-                            0: parseInt(y) - 1
-                        };
-                    }
-                } else {
-                    if (y == 1) {
-                        yy = {
-                            0: parseInt(y) + 1,
-                            1: parseInt(y) + 2
-                        };
-                    } else {
-                        yy = {
-                            0: parseInt(y) + 1
-                        };
-                    }
-                }
-                for (var i in yy) {
-                    if ($("td[x='" + x + "']*[y='" + yy[i] + "']").attr("free") == "yes") {
-                        $("td[x='" + x + "']*[y='" + yy[i] + "']").attr("bgcolor", "#FF0000");
-                    } else break;
-                }
-            }
-
-            function PeshkaEst() {
-                if ($("img[x='" + x + "']*[y='" + y + "']").attr("position") == "down") {
-                    yy = {
-                        0: parseInt(y) - 1
-                    };
-
-                } else {
-                    yy = {
-                        0: parseInt(y) + 1
-                    };
-                }
-                xx = {
-                    0: parseInt(x) + 1,
-                    1: parseInt(x) - 1
+            } else {
+                yy = {
+                    0: parseInt(y) - 1
                 };
-                for (var i in yy) {
-                    for (var j in xx) {
-                        if ($("td[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("free") == "no" &&
-                            $("img[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("color") != $("img[x='" + x + "']*[y='" + y + "']").attr("color")) {
-                            $("td[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("bgcolor", "#FF0000");
-                        }
-
-                    }
-                }
             }
-
-
-            function Kon() {
+        } else {
+            if (y == 1) {
                 yy = {
                     0: parseInt(y) + 1,
-                    1: parseInt(y) + 2,
-                    2: parseInt(y) - 1,
-                    3: parseInt(y) - 2
+                    1: parseInt(y) + 2
                 };
-                xx = {
-                    0: parseInt(x) + 2,
-                    1: parseInt(x) + 1,
-                    2: parseInt(x) - 2,
-                    3: parseInt(x) - 1
-                };
-                for (var i in yy) {
-                    for (var j in xx) {
-                        if ($("img[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("color") != $("img[x='" + x + "']*[y='" + y + "']").attr("color") &&
-                            ((i % 2 != 0 && j % 2 != 0) ||
-                                (i % 2 == 0 && j % 2 == 0))) {
-                            $("td[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("bgcolor", "#FF0000");
-                        }
-
-                    }
-                }
-            }
-
-
-
-            function Koroleva() {
-                Ofic();
-                Slon();
-            }
-
-            function Korol() {
+            } else {
                 yy = {
-                    0: parseInt(y) + 1,
-                    1: parseInt(y) - 1,
-                    2: parseInt(y)
+                    0: parseInt(y) + 1
                 };
-                xx = {
-                    0: parseInt(x) + 1,
-                    1: parseInt(x) - 1,
-                    2: parseInt(x)
-                };
-                for (var i in yy) {
-                    for (var j in xx) {
-                        if ($("img[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("color") != $("img[x='" + x + "']*[y='" + y + "']").attr("color")) {
-                            $("td[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("bgcolor", "#FF0000");
-                        }
+            }
+        }
+        for (var i in yy) {
+            if ($("td[x='" + x + "']*[y='" + yy[i] + "']").attr("free") == "yes") {
+                $("td[x='" + x + "']*[y='" + yy[i] + "']").attr("bgcolor", "#FF0000");
+            } else break;
+        }
+    }
 
+    function PeshkaEst () {
+        if ($("img[x='" + x + "']*[y='" + y + "']").attr("position") == "down") {
+            yy = {
+                0: parseInt(y) - 1
+            };
+
+        } else {
+            yy = {
+                0: parseInt(y) + 1
+            };
+        }
+        xx = {
+            0: parseInt(x) + 1,
+            1: parseInt(x) - 1
+        };
+        for (var i in yy) {
+            for (var j in xx) {
+                if ($("td[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("free") == "no" &&
+                    $("img[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("color") != $("img[x='" + x + "']*[y='" + y + "']").attr("color")) {
+                    $("td[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("bgcolor", "#FF0000");
+                }
+
+            }
+        }
+    }
+
+    
+    function Kon() {
+        yy = {
+            0: parseInt(y) + 1,
+            1: parseInt(y) + 2,
+            2: parseInt(y) - 1,
+            3: parseInt(y) - 2
+        };
+        xx = {
+            0: parseInt(x) + 2,
+            1: parseInt(x) + 1,
+            2: parseInt(x) - 2,
+            3: parseInt(x) - 1
+        };
+        for (var i in yy) {
+            for (var j in xx) {
+                if ($("img[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("color") != $("img[x='" + x + "']*[y='" + y + "']").attr("color") &&
+                    ((i % 2 != 0 && j % 2 != 0) ||
+                        (i % 2 == 0 && j % 2 == 0))) {
+                    $("td[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("bgcolor", "#FF0000");
+                }
+
+            }
+        }
+    }
+
+    
+
+    function Koroleva() {
+        Ofic();
+		Slon();
+    }
+    function Korol() {
+        yy = {
+            0: parseInt(y) + 1,
+            1: parseInt(y) - 1,
+            2: parseInt(y)
+        };
+        xx = {
+            0: parseInt(x) + 1,
+            1: parseInt(x) - 1,
+            2: parseInt(x)
+        };
+        for (var i in yy) {
+            for (var j in xx) {
+                if ($("img[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("color") != $("img[x='" + x + "']*[y='" + y + "']").attr("color")) {
+                    $("td[x='" + xx[j] + "']*[y='" + yy[i] + "']").attr("bgcolor", "#FF0000");
+                }
+
+            }
+        }
+    }
+	function Ofic() {
+        var j = y;
+        var f = false;
+        for (var i = x; i < N; i++) {
+            if (j > 7) break;
+            if (i != x && y != j) {
+                if ($("td[x='" + i + "']*[y='" + j + "']").attr("free") == "no") {
+                    f = true;
+                }
+                if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + j + "']").attr("color")) {
+                    $("td[x='" + i + "']*[y='" + j + "']").attr("bgcolor", "#FF0000");
+                }
+                if (f == true) break;
+            }
+            j++;
+        }
+        j = y;
+        var f = false;
+        for (var i = x; i > -1; i--) {
+            if (j < 0) break;
+            if (i != x && y != j) {
+                if ($("td[x='" + i + "']*[y='" + j + "']").attr("free") == "no") {
+                    f = true;
+                }
+                if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + j + "']").attr("color")) {
+                    $("td[x='" + i + "']*[y='" + j + "']").attr("bgcolor", "#FF0000");
+                }
+                if (f == true) break;
+            }
+            j++;
+        }
+        j = y;
+        var f = false;
+        for (var i = x; i < N; i++) {
+            if (j < 0) break;
+            if (i != x && y != j) {
+                if ($("td[x='" + i + "']*[y='" + j + "']").attr("free") == "no") {
+                    f = true;
+                }
+                if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + j + "']").attr("color")) {
+                    $("td[x='" + i + "']*[y='" + j + "']").attr("bgcolor", "#FF0000");
+                }
+                if (f == true) break;
+            }
+            j--;
+        }
+        j = y;
+        var f = false;
+        for (var i = x; i > -1; i--) {
+            if (j > 7) break;
+            if (i != x && y != j) {
+                if ($("td[x='" + i + "']*[y='" + j + "']").attr("free") == "no") {
+                    f = true;
+                }
+                if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + j + "']").attr("color")) {
+                    $("td[x='" + i + "']*[y='" + j + "']").attr("bgcolor", "#FF0000");
+                }
+                if (f == true) break;
+            }
+            j--;
+        }
+    }
+	function Slon() {
+        var f = false;
+        for (var i = y; i > -1; i--) {
+            if (i != y) {
+                if ($("td[x='" + x + "']*[y='" + i + "']").attr("free") == "no") {
+                    f = true;
+                }
+                if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + x + "']*[y='" + i + "']").attr("color")) {
+                    $("td[x='" + x + "']*[y='" + i + "']").attr("bgcolor", "#FF0000");
+                }
+
+                if (f == true) break;
+            }
+        }
+        f = false;
+        for (var i = y; i < N; i++) {
+            if (i != y) {
+                if ($("td[x='" + x + "']*[y='" + i + "']").attr("free") == "no") {
+                    f = true;
+                }
+                if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + x + "']*[y='" + i + "']").attr("color")) {
+                    $("td[x='" + x + "']*[y='" + i + "']").attr("bgcolor", "#FF0000");
+                }
+                if (f == true) break;
+            }
+        }
+        f = 0;
+        for (var i = x; i > -1; i--) {
+            if (i != x) {
+                if ($("td[x='" + i + "']*[y='" + y + "']").attr("free") == "no") {
+                    f = true;
+                }
+                if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + y + "']").attr("color")) {
+                    $("td[x='" + i + "']*[y='" + y + "']").attr("bgcolor", "#FF0000");
+                }
+                if (f == true) break;
+            }
+        }
+        f = 0;
+        for (var i = x; i < N; i++) {
+            if (i != x) {
+                if ($("td[x='" + i + "']*[y='" + y + "']").attr("free") == "no") {
+                    f = true;
+                }
+                if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + y + "']").attr("color")) {
+                    $("td[x='" + i + "']*[y='" + y + "']").attr("bgcolor", "#FF0000");
+                }
+                if (f == true) break;
+            }
+        }
+    }
+
+
+    function chek(step) {
+        for (var i = 0; i < N; i++) {
+            for (var j = 0; j < N; j++) {
+                x = i;
+                y = j;
+                if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != step) {
+                    name = $("img[x='" + x + "']*[y='" + y + "']").attr("name");
+                    if (name == "peshka") {
+                        PeshkaEst();
+                    }
+                    if (name == "slon") {
+                        Slon();
+                    }
+                    if (name == "kon") {
+                        Kon();
+                    }
+                    if (name == "ofic") {
+                        Ofic();
+                    }
+                    if (name == "koroleva") {
+                        Koroleva();
+                    }
+                    if (name == "korol") {
+                        Korol();
                     }
                 }
             }
+        }
 
-            function Ofic() {
-                var j = y;
-                var f = false;
-                for (var i = x; i < N; i++) {
-                    if (j > 7) break;
-                    if (i != x && y != j) {
-                        if ($("td[x='" + i + "']*[y='" + j + "']").attr("free") == "no") {
-                            f = true;
-                        }
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + j + "']").attr("color")) {
-                            $("td[x='" + i + "']*[y='" + j + "']").attr("bgcolor", "#FF0000");
-                        }
-                        if (f == true) break;
-                    }
-                    j++;
-                }
-                j = y;
-                var f = false;
-                for (var i = x; i > -1; i--) {
-                    if (j < 0) break;
-                    if (i != x && y != j) {
-                        if ($("td[x='" + i + "']*[y='" + j + "']").attr("free") == "no") {
-                            f = true;
-                        }
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + j + "']").attr("color")) {
-                            $("td[x='" + i + "']*[y='" + j + "']").attr("bgcolor", "#FF0000");
-                        }
-                        if (f == true) break;
-                    }
-                    j++;
-                }
-                j = y;
-                var f = false;
-                for (var i = x; i < N; i++) {
-                    if (j < 0) break;
-                    if (i != x && y != j) {
-                        if ($("td[x='" + i + "']*[y='" + j + "']").attr("free") == "no") {
-                            f = true;
-                        }
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + j + "']").attr("color")) {
-                            $("td[x='" + i + "']*[y='" + j + "']").attr("bgcolor", "#FF0000");
-                        }
-                        if (f == true) break;
-                    }
-                    j--;
-                }
-                j = y;
-                var f = false;
-                for (var i = x; i > -1; i--) {
-                    if (j > 7) break;
-                    if (i != x && y != j) {
-                        if ($("td[x='" + i + "']*[y='" + j + "']").attr("free") == "no") {
-                            f = true;
-                        }
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + j + "']").attr("color")) {
-                            $("td[x='" + i + "']*[y='" + j + "']").attr("bgcolor", "#FF0000");
-                        }
-                        if (f == true) break;
-                    }
-                    j--;
-                }
-            }
-
-            function Slon() {
-                var f = false;
-                for (var i = y; i > -1; i--) {
-                    if (i != y) {
-                        if ($("td[x='" + x + "']*[y='" + i + "']").attr("free") == "no") {
-                            f = true;
-                        }
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + x + "']*[y='" + i + "']").attr("color")) {
-                            $("td[x='" + x + "']*[y='" + i + "']").attr("bgcolor", "#FF0000");
-                        }
-
-                        if (f == true) break;
-                    }
-                }
-                f = false;
-                for (var i = y; i < N; i++) {
-                    if (i != y) {
-                        if ($("td[x='" + x + "']*[y='" + i + "']").attr("free") == "no") {
-                            f = true;
-                        }
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + x + "']*[y='" + i + "']").attr("color")) {
-                            $("td[x='" + x + "']*[y='" + i + "']").attr("bgcolor", "#FF0000");
-                        }
-                        if (f == true) break;
-                    }
-                }
-                f = 0;
-                for (var i = x; i > -1; i--) {
-                    if (i != x) {
-                        if ($("td[x='" + i + "']*[y='" + y + "']").attr("free") == "no") {
-                            f = true;
-                        }
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + y + "']").attr("color")) {
-                            $("td[x='" + i + "']*[y='" + y + "']").attr("bgcolor", "#FF0000");
-                        }
-                        if (f == true) break;
-                    }
-                }
-                f = 0;
-                for (var i = x; i < N; i++) {
-                    if (i != x) {
-                        if ($("td[x='" + i + "']*[y='" + y + "']").attr("free") == "no") {
-                            f = true;
-                        }
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != $("img[x='" + i + "']*[y='" + y + "']").attr("color")) {
-                            $("td[x='" + i + "']*[y='" + y + "']").attr("bgcolor", "#FF0000");
-                        }
-                        if (f == true) break;
-                    }
-                }
-            }
-
-
-            function chek(step) {
-                for (var i = 0; i < N; i++) {
-                    for (var j = 0; j < N; j++) {
-                        x = i;
-                        y = j;
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != step) {
-                            name = $("img[x='" + x + "']*[y='" + y + "']").attr("name");
-                            if (name == "peshka") {
-                                PeshkaEst();
-                            }
-                            if (name == "slon") {
-                                Slon();
-                            }
-                            if (name == "kon") {
-                                Kon();
-                            }
-                            if (name == "ofic") {
-                                Ofic();
-                            }
-                            if (name == "koroleva") {
-                                Koroleva();
-                            }
-                            if (name == "korol") {
-                                Korol();
-                            }
-                        }
-                    }
-                }
-
-                if ($("[name='korol']*[color='" + step + "']").parent().attr("bgcolor") == "#FF0000") {
-                    color();
-                    return "yes";
-                } else {
-                    color();
-                    return "no";
-                }
-            }
-
-            function chekmate(col) {
-                var fl;
-                var f = false;
-                if (col == "white") var col2 = "black";
-                if (col == "black") var col2 = "white";
-                for (var i = 0; i < N; i++) {
-                    for (var j = 0; j < N; j++) {
-                        x = i;
-                        y = j;
-                        X = x;
-                        Y = y;
-                        if ($("img[x='" + x + "']*[y='" + y + "']").attr("color") != col) {
-                            name = $("img[x='" + x + "']*[y='" + y + "']").attr("name");
-                            if (name == "pawn") {
-                                PawnStep();
-                                PawnEat();
-                            }
-                            if (name == "rook") {
-                                RookStep();
-                            }
-                            if (name == "knight") {
-                                KnightStep();
-                            }
-                            if (name == "bishop") {
-                                BishopStep();
-                            }
-                            if (name == "queen") {
-                                QueenStep();
-                            }
-                            if (name == "king") {
-                                KingStep();
-                            }
-                            $("[bgcolor='#FF0000']").each(function () {
-                                fl = false;
-                                x1 = $(this).attr("x");
-                                y1 = $(this).attr("y");
-                                if ($("td[x='" + x1 + "']*[y='" + y1 + "']").attr("free") == "no" &&
-                                    $("img[x='" + x1 + "']*[y='" + y1 + "']").attr("color") != $("img[x='" + X + "']*[y='" + Y + "']").attr("color")) {
-                                    var del1 = $("img[x='" + x1 + "']*[y='" + y1 + "']");
-                                    del1.remove();
-                                    fl = true;
-                                }
-                                $("img[x='" + X + "']*[y='" + Y + "']").appendTo("td[x='" + x1 + "']*[y='" + y1 + "']").attr("x", x1).attr("y", y1);
-                                $("td[x='" + X + "']*[y='" + Y + "']").attr("free", "yes");
-                                $("td[x='" + x1 + "']*[y='" + y1 + "']").attr("free", "no");
-                                color();
-                                if (chek(col2) == "no") {
-                                    $("img[x='" + x1 + "']*[y='" + y1 + "']").appendTo("td[x='" + X + "']*[y='" + Y + "']").attr("x", X).attr("y", Y);
-                                    $("td[x='" + X + "']*[y='" + Y + "']").attr("free", "no");
-                                    if (fl == true) {
-                                        $("td[x='" + x1 + "']*[y='" + y1 + "']").attr("free", "no");
-                                        del1.appendTo("td[x='" + x1 + "']*[y='" + y1 + "']");
-                                    } else {
-                                        $("td[x='" + x1 + "']*[y='" + y1 + "']").attr("free", "yes");
-                                    }
-                                    f = true;
-                                    return false;
-                                } else {
-                                    $("img[x='" + x1 + "']*[y='" + y1 + "']").appendTo("td[x='" + X + "']*[y='" + Y + "']").attr("x", X).attr("y", Y);
-                                    $("td[x='" + X + "']*[y='" + Y + "']").attr("free", "no");
-                                    if (fl == true) {
-                                        $("td[x='" + x1 + "']*[y='" + y1 + "']").attr("free", "no");
-                                        del1.appendTo("td[x='" + x1 + "']*[y='" + y1 + "']");
-                                    } else {
-                                        $("td[x='" + x1 + "']*[y='" + y1 + "']").attr("free", "yes");
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-                if (f == true) return "no";
-                return "yes";
-            }
+        if ($("[name='korol']*[color='" + step + "']").parent().attr("bgcolor") == "#FF0000") {
+            color();
+            return "yes";
+        } else {
+            color();
+            return "no";
+        }
+    }
+	function chekmate(col){
+  var fl;
+  var f=false;
+  if(col=="white")var col2="black";
+  if(col=="black")var col2="white";
+  for( var i=0;i<N;i++){
+           for(var j=0;j<N;j++){     
+     x=i;
+                y=j;
+     X=x;
+     Y=y;
+    if($("img[x='"+x+"']*[y='"+y+"']").attr("color")!=col){
+      name=$("img[x='"+x+"']*[y='"+y+"']").attr("name");
+     if(name=="peshka"){
+       Peshka();
+       PeshkaEst();
+      }
+      if(name=="kon"){
+       Kon();
+      }
+      if(name=="slon"){
+       Slon();
+      }
+      if(name=="ofic"){
+       Ofic();
+      }
+      if(name=="koroleva"){
+       Koroleva();
+      }
+      if(name=="korol"){
+       Korol();
+      }    
+     $("[bgcolor='#FF0000']").each(function(){
+      fl=false;
+      x1=$(this).attr("x");
+      y1=$(this).attr("y");     
+      if($("td[x='"+x1+"']*[y='"+y1+"']").attr("free")=="no" && 
+         $("img[x='"+x1+"']*[y='"+y1+"']").attr("color")!=$("img[x='"+X+"']*[y='"+Y+"']").attr("color")){
+        var del1=$("img[x='"+x1+"']*[y='"+y1+"']");
+        del1.remove();
+        fl=true;
+      } 
+      $("img[x='"+X+"']*[y='"+Y+"']").appendTo("td[x='"+x1+"']*[y='"+y1+"']").attr("x",x1).attr("y",y1);
+      $("td[x='"+X+"']*[y='"+Y+"']").attr("free","yes");
+      $("td[x='"+x1+"']*[y='"+y1+"']").attr("free","no");      
+      color();
+      if(chek(col2)=="no"){
+       $("img[x='"+x1+"']*[y='"+y1+"']").appendTo("td[x='"+X+"']*[y='"+Y+"']").attr("x",X).attr("y",Y);
+       $("td[x='"+X+"']*[y='"+Y+"']").attr("free","no");
+       if(fl==true){
+       $("td[x='"+x1+"']*[y='"+y1+"']").attr("free","no");
+       del1.appendTo("td[x='"+x1+"']*[y='"+y1+"']");
+       }
+       else{
+        $("td[x='"+x1+"']*[y='"+y1+"']").attr("free","yes");
+       }
+       f=true;
+       return false;
+      }
+      else{
+       $("img[x='"+x1+"']*[y='"+y1+"']").appendTo("td[x='"+X+"']*[y='"+Y+"']").attr("x",X).attr("y",Y);
+       $("td[x='"+X+"']*[y='"+Y+"']").attr("free","no");
+       if(fl==true){
+       $("td[x='"+x1+"']*[y='"+y1+"']").attr("free","no");
+       del1.appendTo("td[x='"+x1+"']*[y='"+y1+"']");
+       }
+       else{
+        $("td[x='"+x1+"']*[y='"+y1+"']").attr("free","yes");
+       }
+      }     
+     });
+    }
+   }
+  }
+  if(f==true)return "no"
+  return "yes";
+   }
 </script>
